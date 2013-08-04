@@ -18,7 +18,9 @@
 				<div class='message-container clearfix'>
 					<div id="messages" class='messages left'></div>
 					<div id='typing'><p>User is typing</p></div>
-					<div class='users right'></div>
+					<div class='users right'>
+						<div class='user'>Evan</div>
+					</div>
 				</div>
 				<div class='input clearfix'>
 					<div class='textarea left'>
@@ -37,38 +39,7 @@
 		<script>
 			$(function(){
 				$(window).on('load', function(){
-					var sendButton = $("#sendButton");
-					chat.start();
-
-					var socket = io.connect('http://localhost/');
-			        socket.on('news', function (data) {
-			        	chat.updateMessages(data);
-			  		});
-
-			  		sendButton.on('click', function(){
-			  			chat.createMessage(socket);
-			  		});
-
-
-			  		$(window).on('keydown', function(e){
-
-			  			if($("#input").focus() && e.keyCode != 13){
-			  				chat.userTyping();
-			  			};
-
-			  			if(e.keyCode == 13){
-			  				chat.createMessage(socket);
-			  			}
-
-			  			if(e.keyCode == 38){
-			  				chat.scrollMessages('up');
-			  			}
-
-			  			if(e.keyCode == 40){
-			  				chat.scrollMessages('down');
-			  			}
-			  		});
-
+					chat.main.start();
 				});
 				
 			});

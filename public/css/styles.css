@@ -15,7 +15,7 @@ body{
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 400;
 	font-size:11px;
-	color: #DCE8EB;
+	color: rgba(0,0,0,.5);
 	background: #7D8288;
 }
 
@@ -64,7 +64,7 @@ body{
 	margin-left: 10px;
 	position: relative;
 	top:10px;
-	border: 1px solid #DCE8EB;
+	border: 1px solid #c3cfd9;
 	box-shadow: 0px 1px 1px #fff inset, 0px 1px 0px rgba(0,0,0,.1);
 }
 
@@ -115,11 +115,23 @@ body{
 	margin-top: 10px;
 }
 
+
+/*Users*/
 .users{
 	background: #F7F9FE;
 	border-right: 1px solid #c3cfd9;
 	height: 100%;
 	width: 150px;
+	overflow-y: scroll;
+}
+
+.user{
+	width: 100%;
+	font-weight: 700;
+	height: 30px;
+	background: #ccc;
+	padding: 7px;
+	border-bottom: 1px solid #c3cfd;
 }
 
 /*User Input*/
@@ -129,6 +141,7 @@ body{
 	bottom: 80px;
 	right: 158px;
 	display:none;
+	font-style: italic;
 }
 
 .input{
@@ -211,7 +224,7 @@ body{
 /*Scrollbar*/
 
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 0px;
 }
  
 /* Track */

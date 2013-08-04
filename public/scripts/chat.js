@@ -1,54 +1,86 @@
-var chat = {
-	container: $("#chat"),
-	messageContainer: $("#messages"),
-	chatInput: $("#input"),
-	messages: [],
-	counter: 0,
-	timer: null,
+//Create out chat object
+
+if(!chat){
+	var chat = {};
+}
+
+//Create our chat's main module
+chat.main = (function(){
+
+	//initial variables
+	var container = $("#chat"),
+	messageContainer = $("#messages"),
+	sendButton = $("#sendButton"),
+	chatInput = $("#input"),
+	messages = [],
+	counter = 0,
+	timer =  null;
+	var socket = io.connect('http://localhost/');
 	//ipAddress: '';
 
-	start: function(){
-		this.container.css({'opacity':'0'});
+	//init function -> sets up event listeners, fades in chat window on screen
+	function start(){
+		container.css({'opacity':'0'});
 
-		this.container.animate({
+		container.animate({
 			opacity: 1,
 		}, 400);
-	},
 
-	createMessage: function(socket){
-		var _message = this.chatInput.val();
+	    socket.on('news', function (data) {
+        	updateMessages(data);
+  		});
+
+  		sendButton.on('click', function(){
+  			createMessage(socket);
+  		});
+
+		$(window).on('keydown', function(e){
+			 checkTyping(e, socket);
+		});
+	};
+
+	//creates our actual messages based on user input
+	function createMessage(socket){
+		var _message = chatInput.val();
+
 
 		if(_message.length == 0 || _message == '' || _message == undefined){
-			this.chatInput.css({'background':'rgba(255,0,0,.6)','color':'#f6f6f6'});
+			//if there isn't any user input, change bg of input field as indication
+			chatInput.css({'background':'rgba(255,0,0,.6)','color':'#f6f6f6'});
 		}else{
-			this.chatInput.css({background:'#f6f6f6',color:'#394045'});
+			//the user typed something, so let's change the color back, and send the message to our server
+			chatInput.css({background:'#f6f6f6',color:'#394045'});
 			socket.emit('chat', {'ip': '00.00.00','message': _message});
-			this.chatInput.val('');
+
+			//clear the input field
+			chatInput.val('');
 		};
 		
-	},
+	};
 
-	updateMessages: function(data){
+	function updateMessages(data){
 		
+		//if we receive a message from the server
 		if(data.message){
 			var html = '';
 
-			if(this.messages.length > 0){
-				this.counter = this.messages.length;
+			//reset our counter to scroll the previous messages
+			if(messages.length > 0){
+				counter = messages.length;
 			}
 
-			if(this.counter == 0){
+			if(counter == 0){
 				html += "<div id='welcome' class='message new'><p>" + data.message + "</p></div>";
 			}else{
 				if($('#welcome').length != 0){
 					$("#welcome").remove();
 				}
 
-				this.counter = this.messages.length;
+				counter = messages.length;
 				
-				this.messages.push({'ip':data.ip, 'message':data.message});
+				messages.push({'ip':data.ip, 'message':data.message});
 
-				var _messages = this.messages, _count = this.messages.length;
+				var _messages = messages, _count = messages.length;
 				for(var i = 0; i < _count; i++){
 					if(i == _count - 1){
 						html += "<div class='message new'><p>" /*+ _messages[i]['ip'] + "  " */ + _messages[i]['message'] + "</p></div>";
@@ -58,51 +90,73 @@ var chat = {
 				}
 			}
 
-			this.counter++;
+			counter++;
 			
-			this.messageContainer.html(html);
+			messageContainer.html(html);
 			_scrollHeight = document.getElementById('messages').scrollHeight;
 			
-			if(_scrollHeight >= this.messageContainer.outerHeight()){
-				this.messageContainer.scrollTop(_scrollHeight);
+			if(_scrollHeight >= messageContainer.outerHeight()){
+				messageContainer.scrollTop(_scrollHeight);
 
 			}
 
 			var _new = $('#messages .message.new').removeClass('new');
 
 		}else{
-			this.messageContainer.html = "There was a problem.";
+			messageContainer.html = "There was a problem.";
 		}
-	},
+	};
 
-	scrollMessages: function(dir){
+	function scrollMessages(dir){
 		if(dir == 'up'){
-			if(this.counter > 0){
-				this.chatInput.val(this.messages[this.counter-1]['message']);
-				this.counter--;
+			if(counter > 0){
+				chatInput.val(unescape(messages[counter-1]['message']));
+				counter--;
 			}
 		}
 
 		if(dir == 'down'){
-			if(this.counter < this.messages.length - 1){
-				this.chatInput.val(this.messages[this.counter+1]['message']);
-				this.counter++;
+			if(counter < messages.length - 1){
+				chatInput.val(unescape(messages[counter+1]['message']));
+				counter++;
 			}
 		}
-	},
+	};
 
-	userTyping: function(){
-		if(this.timer){
-			window.clearTimeout(this.timer);
-			this.timer = null;
+    function userTyping(){
+		if(timer){
+			window.clearTimeout(timer);
+			timer = null;
 			$("#typing").show();
 		}
 			
-		this.timer = setTimeout(function(){
+		timer = setTimeout(function(){
 			$("#typing").hide();
-		}, 500);
+		}, 200);
 			
-	},
+	};
 
-};
+	function checkTyping(e,socket){
+		if($("#input").focus() && e.keyCode != 13){
+			userTyping();
+		};
+
+		if(e.keyCode == 13){
+			createMessage(socket);
+		}
+
+		if(e.keyCode == 38){
+			scrollMessages('up');
+		}
+
+		if(e.keyCode == 40){
+			scrollMessages('down');
+		}
+	};
+
+	return{
+		start: start,
+	}
+
+})();
 
