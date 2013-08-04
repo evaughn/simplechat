@@ -1,6 +1,16 @@
 {
-	"name": "chat",
+	"name": "Simple Chat",
 	"description" : "Simple Chat Server",
+	"contributors":[
+		{
+			"author": "Evan Vaughn",
+			"email": "evan.vaughn12@gmail.com",	
+		}
+	],
+	 "repository": {
+	    "type": "git",
+	    "url": "https://github.com/evaughn/simplechat.git"
+	  },
 	"version": "0.0.1",
 	"private": true,
 	"dependencies":{
