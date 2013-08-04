@@ -1,4 +1,6 @@
-simplechat
+Simple Chat
 ==========
 
-Simple Chat Server running on Node.js
+Simple Chat server running on Node.js
+
+*Note: Please run the package.json file to install node dependencies
