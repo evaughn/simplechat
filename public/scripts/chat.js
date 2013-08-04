@@ -13,6 +13,11 @@ chat.main = (function(){
 	sendButton = $("#sendButton"),
 	chatInput = $("#input"),
 	messages = [],
+	keys = {
+		'enter':13,
+		'up': 38,
+		'down':40
+	}
 	counter = 0,
 	timer =  null;
 	var socket = io.connect('http://localhost/');
@@ -137,20 +142,15 @@ chat.main = (function(){
 	};
 
 	function checkTyping(e,socket){
-		if($("#input").focus() && e.keyCode != 13){
-			userTyping();
-		};
 
-		if(e.keyCode == 13){
+		if(e.keyCode == keys['enter']){
 			createMessage(socket);
-		}
-
-		if(e.keyCode == 38){
+		}else if(e.keyCode == keys['up']){
 			scrollMessages('up');
-		}
-
-		if(e.keyCode == 40){
+		}else if(e.keyCode == keys['down']){
 			scrollMessages('down');
+		}else{
+			userTyping();
 		}
 	};
 
