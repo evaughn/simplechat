@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang='en-US'>
+	<head>
+		<meta charset='utf-8'/>
+		<meta name='author' content='Evan Vaughn'/>
+		<meta name='description' content='Simple Chat Server'/>
+		<link rel='stylesheet' href='css/styles.css'/>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+	</head>
+	<body>
+		<div id='chat' class='radial-gradient'>
+			<div class='container'>
+				<div class='border top'>
+					<div class='header-button'></div>
+					<div class='header-button'></div>
+					<div class='header-button'></div>
+				</div>
+				<div class='message-container clearfix'>
+					<div id="messages" class='messages left'></div>
+					<div id='typing'><p>User is typing</p></div>
+					<div class='users right'></div>
+				</div>
+				<div class='input clearfix'>
+					<div class='textarea left'>
+						<input id="input" type='text'></input>
+					</div>
+					<div id="sendButton" class='button send right'>
+						<p>Send</p>
+					</div>
+				</div>
+				<div class='border bottom'></div>
+			</div>
+		</div>
+		<script src="scripts/jquery-2.0.3.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="scripts/chat.js"></script>
+		<script>
+			$(function(){
+				$(window).on('load', function(){
+					var sendButton = $("#sendButton");
+					chat.start();
+
+					var socket = io.connect('http://localhost/');
+			        socket.on('news', function (data) {
+			        	chat.updateMessages(data);
+			  		});
+
+			  		sendButton.on('click', function(){
+			  			chat.createMessage(socket);
+			  		});
+
+
+			  		$(window).on('keydown', function(e){
+
+			  			if($("#input").focus() && e.keyCode != 13){
+			  				chat.userTyping();
+			  			};
+
+			  			if(e.keyCode == 13){
+			  				chat.createMessage(socket);
+			  			}
+
+			  			if(e.keyCode == 38){
+			  				chat.scrollMessages('up');
+			  			}
+
+			  			if(e.keyCode == 40){
+			  				chat.scrollMessages('down');
+			  			}
+			  		});
+
+				});
+				
+			});
+			</script>
+		 <script>
+		  
+		</script>
+	</body>
+</html>
