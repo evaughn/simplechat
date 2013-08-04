@@ -115,18 +115,23 @@ chat.main = (function(){
 	function scrollMessages(dir){
 		if(dir == 'up'){
 			if(counter > 0){
-				chatInput.val(unescape(messages[counter-1]['message']));
+				chatInput.val(unescapeHTML(messages[counter-1]['message']));
 				counter--;
 			}
 		}
 
 		if(dir == 'down'){
 			if(counter < messages.length - 1){
-				chatInput.val(unescape(messages[counter+1]['message']));
+				chatInput.val(unescapeHTML(messages[counter+1]['message']));
 				counter++;
 			}
 		}
 	};
+
+	//http://stackoverflow.com/questions/5302037/javascript-string-replace-lt-into
+	function unescapeHTML(escapedHTML) {
+	  return escapedHTML.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+	}
 
     function userTyping(){
 		if(timer){
