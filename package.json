@@ -1,6 +1,5 @@
 {
   "name": "simplechat",
-  "preferGlobal": true,
   "version": "0.0.1",
   "author": "Evan Vaughn <evan.vaughn12@gmail.com>",
   "description": "Simple Chat Server using Node.js",
