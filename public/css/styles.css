@@ -16,7 +16,7 @@ body{
 	font-weight: 400;
 	font-size:11px;
 	color: rgba(0,0,0,.5);
-	background: #7D8288;
+	background: #f6f7f7;
 }
 
 #chat{
@@ -129,9 +129,9 @@ body{
 	width: 100%;
 	font-weight: 700;
 	height: 30px;
-	background: #ccc;
+	background: rgba(0,0,0,.1);
 	padding: 7px;
-	border-bottom: 1px solid #c3cfd;
+	border-bottom: 1px solid #c3cfd3;
 }
 
 /*User Input*/
@@ -169,6 +169,11 @@ body{
 	color: #999;
 	padding-left: 4px;
 	border: 1px solid #BED2D9;
+}
+
+.textarea>input.error{
+	background: rgba(255,0,0,.5);
+	color:#f6f6f6;
 }
 
 .button{

@@ -51,7 +51,7 @@ chat.main = (function(){
 
 		if(_message.length == 0 || _message == '' || _message == undefined){
 			//if there isn't any user input, change bg of input field as indication
-			chatInput.css({'background':'rgba(255,0,0,.6)','color':'#f6f6f6'});
+			chatInput.addClass('error');
 		}else{
 			//the user typed something, so let's change the color back, and send the message to our server
 			chatInput.css({background:'#f6f6f6',color:'#394045'});
@@ -64,7 +64,7 @@ chat.main = (function(){
 	};
 
 	function updateMessages(data){
-		
+		console.log(data)
 		//if we receive a message from the server
 		if(data.message){
 			var html = '';
@@ -80,8 +80,6 @@ chat.main = (function(){
 				if($('#welcome').length != 0){
 					$("#welcome").remove();
 				}
-
-				counter = messages.length;
 				
 				messages.push({'ip':data.ip, 'message':data.message});
 
@@ -113,19 +111,20 @@ chat.main = (function(){
 	};
 
 	function scrollMessages(dir){
-		if(dir == 'up'){
+		if(dir === 'up'){
 			if(counter > 0){
 				chatInput.val(unescapeHTML(messages[counter-1]['message']));
 				counter--;
 			}
 		}
 
-		if(dir == 'down'){
+		if(dir === 'down'){
 			if(counter < messages.length - 1){
 				chatInput.val(unescapeHTML(messages[counter+1]['message']));
 				counter++;
 			}
 		}
+		
 	};
 
 	//http://stackoverflow.com/questions/5302037/javascript-string-replace-lt-into
@@ -150,12 +149,20 @@ chat.main = (function(){
 
 		if(e.keyCode == keys['enter']){
 			createMessage(socket);
-		}else if(e.keyCode == keys['up']){
-			scrollMessages('up');
-		}else if(e.keyCode == keys['down']){
-			scrollMessages('down');
-		}else{
+		}
+
+		if(e.keyCode !== keys['enter'] &&  e.keyCode !== keys['up'] && e.keyCode !== keys['down']){
 			userTyping();
+		}
+
+		if(messages.length > 0){
+			if(e.keyCode === keys['up']){
+				scrollMessages('up');
+			}
+
+			if(e.keyCode === keys['down']){
+				scrollMessages('down');
+			}
 		}
 	};
 
